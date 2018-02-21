@@ -32,7 +32,7 @@ func AccountGet(c echo.Context) error {
 }
 
 func AccountList(c echo.Context) error {
-
+	return nil
 }
 
 func AccountItemAccountTypeSave(c echo.Context) error {
