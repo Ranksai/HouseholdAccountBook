@@ -3,12 +3,12 @@ package handler
 import (
 	"net/http"
 
-	"github.com/Ranksai/HouseholdAccountBook/src/model/entity"
+	"strconv"
+
+	"github.com/Ranksai/HouseholdAccountBook/src/model/row"
 	"github.com/Ranksai/HouseholdAccountBook/src/xorm"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
-	"strconv"
-	"fmt"
 )
 
 func InitAccountGroupHandler(e *echo.Group) {
@@ -19,7 +19,7 @@ func InitAccountGroupHandler(e *echo.Group) {
 
 func AccountGet(c echo.Context) error {
 	idStr := c.Param("account_id")
-	account := new(entity.Account)
+	account := new(row.Account)
 	xormEngine := xorm.NewXormEngine()
 
 	id, err := strconv.Atoi(idStr)
@@ -36,7 +36,7 @@ func AccountGet(c echo.Context) error {
 		return c.NoContent(http.StatusNotFound)
 	}
 
-	fmt.Println(account)
+	//fmt.Println(account)
 	return c.NoContent(http.StatusOK)
 }
 
