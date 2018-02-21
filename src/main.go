@@ -8,8 +8,10 @@ import (
 func main() {
 
 	e := echo.New()
-	userGroup := e.Group("/v1/user")
+	userGroup := e.Group("/user")
 	handler.InitUserHandler(userGroup)
+	accountGroup := e.Group("/account")
+	handler.InitAccountGroupHandler(accountGroup)
 
 	e.Start(":8080")
 }
