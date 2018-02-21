@@ -11,11 +11,11 @@ import (
 )
 
 func NewXormEngine() *xorm.Engine {
-	host := os.Getenv("POSTGRES_HOST")
+	host := os.Getenv("MYSQL_HOST")
 	if host == "" {
 		host = "localhost"
 	}
-	port := os.Getenv("POSTGRES_PORT")
+	port := os.Getenv("MYSQL_PORT")
 	if port == "" {
 		port = "3306"
 	}
