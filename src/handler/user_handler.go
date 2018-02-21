@@ -1,6 +1,8 @@
 package handler
 
-import "github.com/labstack/echo"
+import (
+	"github.com/labstack/echo"
+)
 
 func InitUserHandler(e *echo.Group) {
 	e.Any("/register", userRegister)
@@ -10,13 +12,13 @@ func InitUserHandler(e *echo.Group) {
 }
 
 func userRegister(c echo.Context) error {
-
+	return nil
 }
 
 func userLogin(c echo.Context) error {
-
+	return nil
 }
 
 func userLogout(c echo.Context) error {
-
+	return nil
 }
