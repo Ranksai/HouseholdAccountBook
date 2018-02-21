@@ -11,4 +11,5 @@ func main() {
 	userGroup := e.Group("/v1/user")
 	handler.InitUserHandler(userGroup)
 
+	e.Start(":8080")
 }
