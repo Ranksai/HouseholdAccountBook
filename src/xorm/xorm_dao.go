@@ -30,7 +30,7 @@ func NewXormEngine() *xorm.Engine {
 	dbname := "household_account_book"
 
 	dsn := fmt.Sprintf(
-		"user=%s host=%s port=%s dbname=%s sslmode=disable",
+		"%s:@tcp(%s:%s)/%s",
 		user,
 		host,
 		port,
