@@ -8,6 +8,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"strconv"
+	"fmt"
 )
 
 func InitAccountGroupHandler(e *echo.Group) {
@@ -35,7 +36,8 @@ func AccountGet(c echo.Context) error {
 		return c.NoContent(http.StatusNotFound)
 	}
 
-	return c.JSON(http.StatusOK, account)
+	fmt.Println(account)
+	return c.NoContent(http.StatusOK)
 }
 
 func AccountList(c echo.Context) error {
