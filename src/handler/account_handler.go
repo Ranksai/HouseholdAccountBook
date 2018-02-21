@@ -5,6 +5,8 @@ import (
 
 	"strconv"
 
+	"fmt"
+
 	"github.com/Ranksai/HouseholdAccountBook/src/model/row"
 	"github.com/Ranksai/HouseholdAccountBook/src/xorm"
 	"github.com/labstack/echo"
@@ -36,8 +38,8 @@ func AccountGet(c echo.Context) error {
 		return c.NoContent(http.StatusNotFound)
 	}
 
-	//fmt.Println(account)
-	return c.NoContent(http.StatusOK)
+	fmt.Println(account)
+	return c.JSON(http.StatusOK, account)
 }
 
 func AccountList(c echo.Context) error {
