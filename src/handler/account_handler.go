@@ -7,6 +7,7 @@ import (
 	"github.com/Ranksai/HouseholdAccountBook/src/xorm"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
+	"strconv"
 )
 
 func InitAccountGroupHandler(e *echo.Group) {
@@ -16,9 +17,15 @@ func InitAccountGroupHandler(e *echo.Group) {
 }
 
 func AccountGet(c echo.Context) error {
-	id := c.Param("account_id")
+	idStr := c.Param("account_id")
 	account := new(entity.Account)
 	xormEngine := xorm.NewXormEngine()
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
 
 	has, err := xormEngine.ID(id).Get(account)
 	if err != nil {
