@@ -3,6 +3,8 @@ package handler
 import (
 	"net/http"
 
+	"strconv"
+
 	"github.com/Ranksai/HouseholdAccountBook/src/model/entity"
 	"github.com/Ranksai/HouseholdAccountBook/src/model/row"
 	"github.com/Ranksai/HouseholdAccountBook/src/xorm"
@@ -18,9 +20,15 @@ func InitAccountGroupHandler(e *echo.Group) {
 }
 
 func AccountGet(c echo.Context) error {
-	id := c.Param("account_id")
+	idStr := c.Param("account_id")
 	account := new(row.Account)
 	xormEngine := xorm.NewXormEngine()
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
 
 	has, err := xormEngine.ID(id).Get(account)
 	if err != nil {
