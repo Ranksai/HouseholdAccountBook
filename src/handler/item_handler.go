@@ -122,8 +122,6 @@ func ItemSaveAccount(c echo.Context) error {
 	if err != nil {
 		log.Error(err)
 		return c.NoContent(http.StatusInternalServerError)
-	} else if insertNum == 0 {
-		return c.NoContent(http.StatusBadRequest)
 	}
 
 	accountRow := new(row.Account)
@@ -136,8 +134,42 @@ func ItemSaveAccount(c echo.Context) error {
 
 	account := new(entity.Account)
 	account.Account = *accountRow
-	return c.JSON(http.StatusOK, items)
+	account.Items = items
+	for i := range items {
+		account.Amount += items[i].Amount
+	}
+	return c.JSON(http.StatusOK, account)
 }
+
+func createAccountEntity(c echo.Context, account_id int) (*entity.Account, error) {
+	items := make(row.Items, 0)
+	xormEngine := xorm.NewXormEngine()
+
+	err := xormEngine.
+		Join("INNER", "account_item", "account_item.item_id = item.id").
+		Where("account_id = ?", account_id).
+		Find(&items)
+	if err != nil {
+		log.Error(err)
+		return nil, c.NoContent(http.StatusInternalServerError)
+	}
+	accountRow := new(row.Account)
+	accountRow.Id = account_id
+	_, err = xormEngine.Id(accountRow.Id).Get(accountRow)
+	if err != nil {
+		log.Error(err)
+		return nil, c.NoContent(http.StatusNotFound)
+	}
+
+	account := new(entity.Account)
+	account.Account = *accountRow
+	account.Items = items
+	for i := range items {
+		account.Amount += items[i].Amount
+	}
+	return account, nil
+}
+
 func ItemDelete(c echo.Context) error {
 	return nil
 }
