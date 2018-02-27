@@ -44,19 +44,7 @@ func ItemList(c echo.Context) error {
 	return nil
 }
 
-type itemParam struct {
-	name        string `form:"name" query:"name"`
-	description string `form:"description" query:"description"`
-	amount      int    `form:"amount" query:"amount"`
-}
-
 func ItemSave(c echo.Context) error {
-	itemParam := new(itemParam)
-	if err := c.Bind(itemParam); err != nil {
-		log.Error(err)
-		return c.NoContent(http.StatusBadRequest)
-	}
-
 	itemRow := new(row.Item)
 	itemRow.Name = c.FormValue("name")
 	itemRow.Description = c.FormValue("description")
@@ -88,18 +76,35 @@ func ItemSaveAccount(c echo.Context) error {
 		log.Error(err)
 		return c.NoContent(http.StatusBadRequest)
 	}
-	itemParam := new(itemParam)
-	if err := c.Bind(itemParam); err != nil {
-		log.Error(err)
-		return c.NoContent(http.StatusBadRequest)
-	}
 	// TODO: itemId
 	accountSaveRow := new(row.AccountItem)
 	accountSaveRow.AccountId = accountId
 
 	xormEngine := xorm.NewXormEngine()
 
-	insertNum, err := xormEngine.Insert(accountSaveRow)
+	itemRow := new(row.Item)
+	itemRow.Name = c.FormValue("name")
+	itemRow.Description = c.FormValue("description")
+	itemRow.Amount, _ = strconv.Atoi(c.FormValue("amount"))
+
+	insertNum, err := xormEngine.Insert(itemRow)
+	if err != nil {
+		log.Error(err)
+		return c.NoContent(http.StatusInternalServerError)
+	} else if insertNum == 0 {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	_, err = xormEngine.Where("name = ?", itemRow.Name).Get(itemRow)
+	if err != nil {
+		log.Error(err)
+		return c.NoContent(http.StatusInternalServerError)
+	} else if insertNum == 0 {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	accountSaveRow.ItemId = itemRow.Id
+	insertNum, err = xormEngine.Insert(accountSaveRow)
 	if err != nil {
 		log.Error(err)
 		return c.NoContent(http.StatusInternalServerError)
