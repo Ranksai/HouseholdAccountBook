@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `name` VARCHAR(100) NOT NULL,
   `description` TEXT,
-  `ammount` INTEGER NOT NULL,
+  `amount` INTEGER NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB;
