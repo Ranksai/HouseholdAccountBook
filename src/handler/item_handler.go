@@ -45,9 +45,9 @@ func ItemList(c echo.Context) error {
 }
 
 type itemParam struct {
-	name        string
-	description string
-	amount      int
+	name        string `form:"name" query:"name"`
+	description string `form:"description" query:"description"`
+	amount      int    `form:"amount" query:"amount"`
 }
 
 func ItemSave(c echo.Context) error {
