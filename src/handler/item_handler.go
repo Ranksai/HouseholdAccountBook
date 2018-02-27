@@ -83,6 +83,15 @@ func ItemSaveAccount(c echo.Context) error {
 
 	xormEngine := xorm.NewXormEngine()
 
+	accountRow := new(row.Account)
+	accountRow.Id = accountId
+	//TODo: found
+	_, err = xormEngine.Id(accountRow.Id).Get(accountRow)
+	if err != nil {
+		log.Error(err)
+		return c.NoContent(http.StatusNotFound)
+	}
+
 	itemRow := new(row.Item)
 	itemRow.Name = c.FormValue("name")
 	itemRow.Description = c.FormValue("description")
@@ -122,14 +131,6 @@ func ItemSaveAccount(c echo.Context) error {
 	if err != nil {
 		log.Error(err)
 		return c.NoContent(http.StatusInternalServerError)
-	}
-
-	accountRow := new(row.Account)
-	accountRow.Id = accountId
-	_, err = xormEngine.Id(accountRow.Id).Get(accountRow)
-	if err != nil {
-		log.Error(err)
-		return c.NoContent(http.StatusNotFound)
 	}
 
 	account := new(entity.Account)
