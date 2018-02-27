@@ -7,6 +7,7 @@ import (
 
 	"strconv"
 
+	"github.com/Ranksai/HouseholdAccountBook/src/model/entity"
 	"github.com/Ranksai/HouseholdAccountBook/src/model/row"
 	"github.com/Ranksai/HouseholdAccountBook/src/xorm"
 	"github.com/labstack/gommon/log"
@@ -112,14 +113,30 @@ func ItemSaveAccount(c echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
-	_, err = xormEngine.Where("account_id = ?", accountSaveRow.AccountId).And("item_id = ?", accountSaveRow.ItemId).Get(accountSaveRow)
+	items := new(row.Items)
+
+	err = xormEngine.
+		Join("INNER", "account_item", "account_item.item_id = item.id").
+		Where("account_id = ?", accountSaveRow.AccountId).
+		Find(&items)
 	if err != nil {
 		log.Error(err)
 		return c.NoContent(http.StatusInternalServerError)
 	} else if insertNum == 0 {
 		return c.NoContent(http.StatusBadRequest)
 	}
-	return c.JSON(http.StatusOK, accountSaveRow)
+
+	accountRow := new(row.Account)
+	accountRow.Id = accountId
+	_, err = xormEngine.Id(accountRow.Id).Get(accountRow)
+	if err != nil {
+		log.Error(err)
+		return c.NoContent(http.StatusNotFound)
+	}
+
+	account := new(entity.Account)
+	account.Account = *accountRow
+	return c.JSON(http.StatusOK, items)
 }
 func ItemDelete(c echo.Context) error {
 	return nil
