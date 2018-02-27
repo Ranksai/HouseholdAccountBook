@@ -5,6 +5,8 @@ import (
 
 	"net/http"
 
+	"strconv"
+
 	"github.com/Ranksai/HouseholdAccountBook/src/model/row"
 	"github.com/Ranksai/HouseholdAccountBook/src/xorm"
 	"github.com/labstack/gommon/log"
@@ -18,7 +20,12 @@ func InitItemGroupHandler(e *echo.Group) {
 }
 
 func ItemGet(c echo.Context) error {
-	id := c.Param("id")
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
 	item := new(row.Item)
 	xormEngine := xorm.NewXormEngine()
 
