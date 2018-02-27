@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `house_account_book` (
   `name` VARCHAR(100) NOT NULL,
   `description` TEXT,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC)),
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `account_item` (
