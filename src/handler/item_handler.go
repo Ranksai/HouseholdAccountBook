@@ -58,9 +58,9 @@ func ItemSave(c echo.Context) error {
 	}
 
 	itemRow := new(row.Item)
-	itemRow.Name = itemParam.name
-	itemRow.Description = itemParam.description
-	itemRow.Amount = itemParam.amount
+	itemRow.Name = c.FormValue("name")
+	itemRow.Description = c.FormValue("description")
+	itemRow.Amount, _ = strconv.Atoi(c.FormValue("amount"))
 
 	xormEngine := xorm.NewXormEngine()
 	insertNum, err := xormEngine.Insert(itemRow)
