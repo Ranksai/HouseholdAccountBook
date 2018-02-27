@@ -112,6 +112,13 @@ func ItemSaveAccount(c echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
+	_, err = xormEngine.Where("account_id = ?", accountSaveRow.AccountId).And("item_id = ?", accountSaveRow.ItemId).Get(accountSaveRow)
+	if err != nil {
+		log.Error(err)
+		return c.NoContent(http.StatusInternalServerError)
+	} else if insertNum == 0 {
+		return c.NoContent(http.StatusBadRequest)
+	}
 	return c.JSON(http.StatusOK, accountSaveRow)
 }
 func ItemDelete(c echo.Context) error {
