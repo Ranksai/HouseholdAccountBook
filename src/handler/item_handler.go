@@ -15,6 +15,7 @@ import (
 func InitItemGroupHandler(e *echo.Group) {
 	e.POST("/get/:id", ItemGet)
 	e.POST("/list", ItemList)
+	e.POST("/save", ItemSave)
 	e.POST("/save/account/:account_id", ItemSaveAccount)
 	e.POST("/delete/:id", ItemDelete)
 }
@@ -24,7 +25,7 @@ func ItemGet(c echo.Context) error {
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		log.Fatal(err)
-		return err
+		return c.NoContent(http.StatusBadRequest)
 	}
 	item := new(row.Item)
 	xormEngine := xorm.NewXormEngine()
@@ -42,8 +43,64 @@ func ItemGet(c echo.Context) error {
 func ItemList(c echo.Context) error {
 	return nil
 }
+
+type itemParam struct {
+	name        string
+	description string
+	amount      int
+}
+
+func ItemSave(c echo.Context) error {
+	itemParam := new(itemParam)
+	if err := c.Bind(itemParam); err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	itemRow := new(row.Item)
+	itemRow.Name = itemParam.name
+	itemRow.Description = itemParam.description
+	itemRow.Amount = itemParam.amount
+
+	xormEngine := xorm.NewXormEngine()
+	insertNum, err := xormEngine.Insert(itemRow)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	} else if insertNum == 0 {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	return c.JSON(http.StatusOK, itemRow)
+}
+
 func ItemSaveAccount(c echo.Context) error {
-	return nil
+	accountIdStr := c.Param("account_id")
+	accountId, err := strconv.Atoi(accountIdStr)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusBadRequest)
+	}
+	itemParam := new(itemParam)
+	if err := c.Bind(itemParam); err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusBadRequest)
+	}
+	// TODO: itemId
+	accountSaveRow := new(row.AccountItem)
+	accountSaveRow.AccountId = accountId
+
+	xormEngine := xorm.NewXormEngine()
+
+	insertNum, err := xormEngine.Insert(accountSaveRow)
+	if err != nil {
+		log.Fatal(err)
+		return c.NoContent(http.StatusInternalServerError)
+	} else if insertNum == 0 {
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	return c.JSON(http.StatusOK, accountSaveRow)
 }
 func ItemDelete(c echo.Context) error {
 	return nil

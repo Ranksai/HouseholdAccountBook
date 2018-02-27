@@ -6,7 +6,7 @@ type Item struct {
 	Id          int
 	Name        string
 	Description string
-	amount      int
+	Amount      int
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
