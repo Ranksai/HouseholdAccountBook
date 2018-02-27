@@ -113,7 +113,7 @@ func ItemSaveAccount(c echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
-	items := new(row.Items)
+	items := make(row.Items, 0)
 
 	err = xormEngine.
 		Join("INNER", "account_item", "account_item.item_id = item.id").
