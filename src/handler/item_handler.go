@@ -53,7 +53,7 @@ type itemParam struct {
 func ItemSave(c echo.Context) error {
 	itemParam := new(itemParam)
 	if err := c.Bind(itemParam); err != nil {
-		log.Fatal(err)
+		log.Error(err)
 		return c.NoContent(http.StatusBadRequest)
 	}
 
@@ -65,7 +65,7 @@ func ItemSave(c echo.Context) error {
 	xormEngine := xorm.NewXormEngine()
 	insertNum, err := xormEngine.Insert(itemRow)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 		return c.NoContent(http.StatusInternalServerError)
 	} else if insertNum == 0 {
 		return c.NoContent(http.StatusBadRequest)
@@ -78,12 +78,12 @@ func ItemSaveAccount(c echo.Context) error {
 	accountIdStr := c.Param("account_id")
 	accountId, err := strconv.Atoi(accountIdStr)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 		return c.NoContent(http.StatusBadRequest)
 	}
 	itemParam := new(itemParam)
 	if err := c.Bind(itemParam); err != nil {
-		log.Fatal(err)
+		log.Error(err)
 		return c.NoContent(http.StatusBadRequest)
 	}
 	// TODO: itemId
@@ -94,7 +94,7 @@ func ItemSaveAccount(c echo.Context) error {
 
 	insertNum, err := xormEngine.Insert(accountSaveRow)
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 		return c.NoContent(http.StatusInternalServerError)
 	} else if insertNum == 0 {
 		return c.NoContent(http.StatusBadRequest)
