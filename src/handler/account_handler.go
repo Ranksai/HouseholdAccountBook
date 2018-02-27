@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Ranksai/HouseholdAccountBook/src/model/entity"
+	"github.com/Ranksai/HouseholdAccountBook/src/model/row"
 	"github.com/Ranksai/HouseholdAccountBook/src/xorm"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
@@ -13,11 +14,12 @@ func InitAccountGroupHandler(e *echo.Group) {
 	e.POST("/get/:account_id", AccountGet)
 	e.POST("/list", AccountList)
 	e.POST("/:account_id/item/:item_id/account_type/:account_type_id/save", AccountItemAccountTypeSave)
+	e.POST("/", AccountItemAccountTypeSave)
 }
 
 func AccountGet(c echo.Context) error {
 	id := c.Param("account_id")
-	account := new(entity.Account)
+	account := new(row.Account)
 	xormEngine := xorm.NewXormEngine()
 
 	has, err := xormEngine.ID(id).Get(account)
@@ -28,7 +30,10 @@ func AccountGet(c echo.Context) error {
 		return c.NoContent(http.StatusNotFound)
 	}
 
-	return c.JSON(http.StatusOK, account)
+	accountEntity := new(entity.Account)
+	accountEntity.Account = *account
+
+	return c.JSON(http.StatusOK, accountEntity)
 }
 
 func AccountList(c echo.Context) error {
