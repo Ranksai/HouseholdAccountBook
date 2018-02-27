@@ -49,7 +49,6 @@ CREATE TABLE IF NOT EXISTS `account_item` (
   `account_id` SMALLINT UNSIGNED NOT NULL,
   `item_id` SMALLINT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `account_accout_type` (
