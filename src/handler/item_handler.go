@@ -71,7 +71,14 @@ func ItemSave(c echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
-	return c.JSON(http.StatusOK, itemRow)
+	item, err := xormEngine.Get(itemRow)
+	if err != nil {
+		log.Error(err)
+		return c.NoContent(http.StatusInternalServerError)
+	} else if insertNum == 0 {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	return c.JSON(http.StatusOK, item)
 }
 
 func ItemSaveAccount(c echo.Context) error {
